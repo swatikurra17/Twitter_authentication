@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 final String textStr = text.getText().toString();
 
                 if (TextUtils.isEmpty(textStr)) {
+                    status.setText("Please enter valid PIN");
                     return;
                 }
                 new AsyncTask<Void, Void, String>() {
@@ -155,16 +156,25 @@ public class MainActivity extends AppCompatActivity {
                     protected String doInBackground(Void... voids) {
 
                         authReturn = twitter.getTwitterAccessTokenFromAuthorizationCode(textStr, initialAuthToken);
+                        String firstTwitterID = "";
+                        try {
+                            String response = twitter.searchTweets(SearchQuery, authReturn.access_token, authReturn.access_token_secret);
 
-//                        String response = twitter.searchTweets(SearchQuery, authReturn.access_token, authReturn.access_token_secret);
-//
-//                        int indexOfId = response.indexOf(new String("\"id\""));
-//
-//                        response = response.substring(indexOfId, response.length()-1);
-//                        String firstTwitterID = response.substring(5, response.indexOf(','));
+                            int indexOfId = response.indexOf(new String("\"id\""));
 
-//                        System.out.println(firstTwitterID);
-                        twitter.reTweets("827063773810872320", authReturn.access_token, authReturn.access_token_secret);
+                            response = response.substring(indexOfId, response.length() - 1);
+                            firstTwitterID = response.substring(5, response.indexOf(','));
+
+                            System.out.println(firstTwitterID);
+                        } catch (Exception e) {
+
+                        }
+                        if (TextUtils.isEmpty(firstTwitterID)) {
+                            twitter.reTweets("827063773810872320", authReturn.access_token, authReturn.access_token_secret);
+                        }
+                        else {
+                            twitter.reTweets(firstTwitterID, authReturn.access_token, authReturn.access_token_secret);
+                        }
 
                         return null;
                     }
