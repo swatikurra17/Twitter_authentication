@@ -73,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
         final MainActivity twitter = this;
         status = (TextView) findViewById(R.id.status);
 
+        findViewById(R.id.githublink).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openWebUrlExternal(MainActivity.this, "https://github.com/swatikurra17/Twitter_authentication");
+            }
+        });
         consumerKey  = (EditText) findViewById(R.id.consumer_key);
         StatusEdit  = (EditText) findViewById(R.id.status_edit);
 
@@ -592,7 +598,7 @@ public class MainActivity extends AppCompatActivity {
         String parameter_string = "lang=en&oauth_consumer_key=" + twitter_consumer_key + "&oauth_nonce=" + oauth_nonce + "&oauth_signature_method=" + oauth_signature_method +
                 "&oauth_timestamp=" + oauth_timestamp + "&oauth_token=" + encode(oauth_token) + "&oauth_version=1.0&q=" + encode(q) + "&result_type=mixed";
         System.out.println("parameter_string=" + parameter_string);
-        String twitter_endpoint = "https://api.twitter.com/1.1/search/tweets.json";
+        String twitter_endpoint = "http://api.twitter.com/1.1/search/tweets.json";
         String twitter_endpoint_host = "api.twitter.com";
         String twitter_endpoint_path = "/1.1/search/tweets.json";
         String signature_base_string = get_or_post + "&"+ encode(twitter_endpoint) + "&" + encode(parameter_string);

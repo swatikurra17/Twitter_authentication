@@ -30,11 +30,13 @@
             android:text="Created By: Swati Kurra "
             android:textColor="@color/colorAccent"/>
         <TextView
+            android:id="@+id/githublink"
             android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Avaible At: GitHub URL"
-            android:textColor="@color/colorAccent"/>
+            android:text="Avaible At: https://github.com/swatikurra17/Twitter_authentication"
+            android:textColor="@color/colorAccent"
+            />
 
         <EditText
             android:id="@+id/consumer_key"
