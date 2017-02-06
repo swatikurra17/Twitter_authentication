@@ -70,15 +70,42 @@
             />
 
         <Button
-            android:id="@+id/autheticate_retweet"
+            android:id="@+id/autheticate"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="15dp"
-            android:text="Authenticate and Retweet"/>
+            android:text="Authenticate"/>
 
+        <EditText
+            android:hint="Enter Query string to retweet first tweet "
+            android:id="@+id/query"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="15dp"/>
+
+        <Button
+            android:id="@+id/retweet"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="15dp"
+            android:text="Re-tweet"/>
+
+        <EditText
+            android:hint="Enter Your status here"
+            android:id="@+id/status_edit"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="15dp"/>
+
+        <Button
+            android:id="@+id/status_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="15dp"
+            android:text="Tweet"/>
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:id="@+id/status"
             android:textColor="@color/colorRed"/>
 

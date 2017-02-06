@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
     EditText consumerKey;
     EditText ConsumerSecret;
 
+    EditText searchEdit;
+    EditText StatusEdit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
         final MainActivity twitter = this;
         status = (TextView) findViewById(R.id.status);
 
-         consumerKey  = (EditText) findViewById(R.id.consumer_key);
+        consumerKey  = (EditText) findViewById(R.id.consumer_key);
+        StatusEdit  = (EditText) findViewById(R.id.status_edit);
+
+        searchEdit  = (EditText) findViewById(R.id.query);
         ConsumerSecret  = (EditText) findViewById(R.id.consumer_secret);
 
         if (!TextUtils.isEmpty(consumerKey.getText().toString())) {
@@ -121,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.autheticate_retweet).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.autheticate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EditText text = (EditText) findViewById(R.id.pin);
@@ -139,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                         super.onPostExecute(s);
                         progressDialog.dismiss();
 
-                        status.setText("Authenticated and re-tweeted Successfully..");
+                        status.setText("Authenticated Successfully.. now you can proceed for tweeting ");
 
 
                     }
@@ -147,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void onPreExecute() {
                         super.onPreExecute();
-                        progressDialog.setMessage("Authenticating and re-twitting");
+                        progressDialog.setMessage("Authenticating");
                         progressDialog.setCancelable(false);
                         progressDialog.show();
                     }
@@ -156,9 +162,76 @@ public class MainActivity extends AppCompatActivity {
                     protected String doInBackground(Void... voids) {
 
                         authReturn = twitter.getTwitterAccessTokenFromAuthorizationCode(textStr, initialAuthToken);
+//                        String firstTwitterID = "";
+//                        try {
+//                            String response = twitter.searchTweets(SearchQuery, authReturn.access_token, authReturn.access_token_secret);
+//
+//                            int indexOfId = response.indexOf(new String("\"id\""));
+//
+//                            response = response.substring(indexOfId, response.length() - 1);
+//                            firstTwitterID = response.substring(5, response.indexOf(','));
+//
+//                            System.out.println(firstTwitterID);
+//                        } catch (Exception e) {
+//
+//                        }
+//                        if (TextUtils.isEmpty(firstTwitterID)) {
+//                            twitter.reTweets("827063773810872320", authReturn.access_token, authReturn.access_token_secret);
+//                        }
+//                        else {
+//                            twitter.reTweets(firstTwitterID, authReturn.access_token, authReturn.access_token_secret);
+//                        }
+
+                        return null;
+                    }
+                }.execute();
+            }
+        });
+
+
+
+        findViewById(R.id.retweet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String textStr = searchEdit.getText().toString();
+
+                if (TextUtils.isEmpty(textStr)) {
+                    status.setText("Please enter valid Query");
+                    return;
+                }
+                new AsyncTask<Void, Void, Boolean>() {
+                    final ProgressDialog progressDialog = new ProgressDialog(twitter);
+
+                    @Override
+                    protected void onPostExecute(Boolean s) {
+                        super.onPostExecute(s);
+                        progressDialog.dismiss();
+
+                        if (s) {
+                            status.setText("re-tweeted Successfully.. open your twitter account to verify");
+                        }
+                        else {
+                            status.setText("fail to search the query so Re-tweeting default hard code tweet");
+                        }
+
+
+                    }
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        progressDialog.setMessage("re-tweeting first result of search query");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                    }
+
+                    @Override
+                    protected Boolean doInBackground(Void... voids) {
+
+                        Boolean returnStatus = true;
                         String firstTwitterID = "";
                         try {
-                            String response = twitter.searchTweets(SearchQuery, authReturn.access_token, authReturn.access_token_secret);
+                            String response = twitter.searchTweets(textStr, authReturn.access_token, authReturn.access_token_secret);
 
                             int indexOfId = response.indexOf(new String("\"id\""));
 
@@ -170,13 +243,66 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                         if (TextUtils.isEmpty(firstTwitterID)) {
+                            returnStatus = false;
                             twitter.reTweets("827063773810872320", authReturn.access_token, authReturn.access_token_secret);
                         }
                         else {
+                            returnStatus = true;
                             twitter.reTweets(firstTwitterID, authReturn.access_token, authReturn.access_token_secret);
                         }
 
-                        return null;
+                        return returnStatus;
+                    }
+                }.execute();
+            }
+        });
+
+        findViewById(R.id.status_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String textStr = StatusEdit.getText().toString();
+
+                if (TextUtils.isEmpty(textStr)) {
+                    status.setText("Please enter valid Status ");
+                    return;
+                }
+                new AsyncTask<Void, Void, Boolean>() {
+                    final ProgressDialog progressDialog = new ProgressDialog(twitter);
+
+                    @Override
+                    protected void onPostExecute(Boolean s) {
+                        super.onPostExecute(s);
+                        progressDialog.dismiss();
+
+                        if (s) {
+                            status.setText("tweeted Successfully.. open your twitter account to verify");
+                        }
+                        else {
+                            status.setText("fail to tweet your new status ");
+                        }
+
+
+                    }
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        progressDialog.setMessage("tweeting your new status");
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                    }
+
+                    @Override
+                    protected Boolean doInBackground(Void... voids) {
+
+                        Boolean returnStatus = true;
+                        try {
+                            twitter.updateStatus(textStr, authReturn.access_token, authReturn.access_token_secret);
+                        } catch (Exception e) {
+                            returnStatus = false;
+                        }
+
+                        return returnStatus;
                     }
                 }.execute();
             }
